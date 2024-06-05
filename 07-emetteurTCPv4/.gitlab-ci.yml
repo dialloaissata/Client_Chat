@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+
+image: registry.app.unistra.fr/montavont/img-docker/image
+
+build_07:
+  stage: build
+  script:
+    - cd 07-emetteurTCPv4
+    - scons
+  artifacts:
+    paths:
+      - 07-emetteurTCPv4/sender-tcp
+
+# run tests using the binary build before
+test_07:
+  stage: test
+  needs: [build_07]
+  script:
+  - |
+    echo "starting tests"
+    cd 07-emetteurTCPv4
+    bash tests.sh

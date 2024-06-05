@@ -1,0 +1,30 @@
+from SCons.Script import *
+sources = Glob("*.c")
+
+# Drapeaux de compilation communs
+CFLAGS = ["-Wall", "-Wextra", "-Werror", "-g"]
+
+#Version basique
+env = Environment(CCFLAGS=CFLAGS)
+obj_env = env.Object("client-chat.o", "client-chat.c")
+
+#Version Binaire
+mode_binaire = Environment(CCFLAGS=CFLAGS + ["-DBIN"])
+obj_mode_binaire = mode_binaire.Object("client-chat_BIN.o", "client-chat.c")
+
+#Version transfert de fichier
+fichier = Environment(CCFLAGS=CFLAGS + ["-DFILEIO"])
+obj_fichier = fichier.Object("client-chat_FILE.o", "client-chat.c")
+
+#Création des executables
+version_basique = env.Program("client-chat", [obj_env])
+version_binaire = mode_binaire.Program("client-chat-bin", [obj_mode_binaire])
+version_fichier = fichier.Program("client-chat-file", [obj_fichier])
+
+# Nettoyer les fichiers .o
+Clean(version_binaire, "*.o")
+Clean(version_basique, "*.o")
+Clean(version_fichier, "*.o")
+
+# Alias pour les exécutables
+Alias('all', [version_binaire, version_basique, version_fichier])

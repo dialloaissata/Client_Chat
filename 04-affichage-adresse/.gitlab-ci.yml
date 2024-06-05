@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+
+image: registry.app.unistra.fr/montavont/img-docker/image
+
+build_04:
+  stage: build
+  script:
+    - cd 04-affichage-adresse
+    - scons
+  artifacts:
+    paths:
+      - 04-affichage-adresse/receiver-udp
+
+# run tests using the binary build before
+test_04:
+  stage: test
+  needs: [build_04]
+  script:
+  - |
+    echo "starting tests"
+    cd 04-affichage-adresse
+    bash tests.sh

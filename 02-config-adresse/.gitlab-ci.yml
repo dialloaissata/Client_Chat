@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+
+image: registry.app.unistra.fr/montavont/img-docker/image
+
+build_02:
+  stage: build
+  script:
+    - cd 02-config-adresse
+    - scons
+  artifacts:
+    paths:
+      - 02-config-adresse/sender-udp
+
+# run tests using the binary build before
+test_02:
+  stage: test
+  needs: [build_02]
+  script:
+  - |
+    echo "starting test"
+    cd 02-config-adresse
+    bash tests.sh

@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+
+image: registry.app.unistra.fr/montavont/img-docker/image
+
+build_11:
+  stage: build
+  script:
+    - cd 11-dialogue-serveurTCP
+    - scons
+  artifacts:
+    paths:
+      - 11-dialogue-serveurTCP/client-http
+
+# run tests using the binary build before
+test_11:
+  stage: test
+  needs: [build_11]
+  script:
+  - |
+    echo "starting tests"
+    cd 11-dialogue-serveurTCP
+    bash tests.sh

@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+
+image: registry.app.unistra.fr/montavont/img-docker/image
+
+build_10:
+  stage: build
+  script:
+    - cd 10-transfert-fichierTCPv6-dest
+    - scons
+  artifacts:
+    paths:
+      - 10-transfert-fichierTCPv6-dest/receiver-tcp
+
+# run tests using the binary build before
+test_10:
+  stage: test
+  needs: [build_10]
+  script:
+  - |
+    echo "starting tests"
+    cd 10-transfert-fichierTCPv6-dest
+    bash tests.sh

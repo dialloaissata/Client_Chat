@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+
+image: registry.app.unistra.fr/montavont/img-docker/image
+
+build_06:
+  stage: build
+  script:
+    - cd 06-recepteurUDPv6
+    - scons
+  artifacts:
+    paths:
+      - 06-recepteurUDPv6/receiver-udp
+
+# run tests using the binary build before
+test_06:
+  stage: test
+  needs: [build_06]
+  script:
+  - |
+    echo "starting tests"
+    cd 06-recepteurUDPv6
+    bash tests.sh

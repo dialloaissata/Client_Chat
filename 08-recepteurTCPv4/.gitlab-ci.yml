@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+
+image: registry.app.unistra.fr/montavont/img-docker/image
+
+build_08:
+  stage: build
+  script:
+    - cd 08-recepteurTCPv4
+    - scons
+  artifacts:
+    paths:
+      - 08-recepteurTCPv4/receiver-tcp
+
+# run tests using the binary build before
+test_08:
+  stage: test
+  needs: [build_08]
+  script:
+  - |
+    echo "starting tests"
+    cd 08-recepteurTCPv4
+    bash tests.sh
